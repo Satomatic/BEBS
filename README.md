@@ -1,4 +1,4 @@
-## Brian Epic Build System
+## Brians Epic Build System
 
 ### Introduction
 #### What is it?
@@ -11,7 +11,7 @@ I found that make was too complicated when all I want to do is compile some file
 - [ ] Header file recompile
 - [ ] Detect new files
 - [ ] Support for compile templates, eg: `{%COMPILER%} {%ARGS%} {%LIBS%} {%FILES%}`
-- [ ] Clean source code
+- [/] Clean source code
 - [ ] Add more examples
 
 ### How to use

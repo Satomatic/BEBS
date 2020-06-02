@@ -1,3 +1,5 @@
+from build import *
+from file import *
 import linecache
 import sqlite3
 import sys
@@ -88,50 +90,7 @@ if not os.path.isdir(builddir):
 
 # collect project files #
 print("Collecting files ...")
-changed_files = []
-
-# only build changed files #
-if os.path.isfile(builddir + "build.db"):
-	database = sqlite3.connect(builddir + "build.db")
-	cursor = database.cursor()
-
-	for item in files:
-		cursor.execute("SELECT * FROM files WHERE file ='" + item + "'")
-		dbreturn = cursor.fetchall()
-
-		# new file found in bmake list #
-		if len(dbreturn) == 0:
-			print("new file " + item)
-			cursor.execute("INSERT INTO files values ('" + item + "', '" + str(os.stat(item).st_mtime) + "');")
-			changed_files.insert(len(changed_files), item)
-		else:
-			last_c_time = dbreturn[0][1]
-			curr_c_time = str(os.stat(item).st_mtime)
-
-			if last_c_time != curr_c_time:
-				changed_files.insert(len(changed_files), dbreturn[0][0])
-				cursor.execute("UPDATE files SET date = '" + curr_c_time + "' WHERE file = '" + item + "';")
-			else:
-				print("skipped '" + item + "'")
-
-	database.commit()
-	database.close()
-
-# no cache found, build all files #
-else:
-	database = sqlite3.connect(builddir + "build.db")
-	database.execute("CREATE TABLE files (file TEXT, date TEXT);")
-	database.commit()
-
-	for item in files:
-		database.execute("INSERT INTO files values ('" + item + "', '" + str(os.stat(item).st_mtime) + "');")
-
-		print("new file '" + item + "'")
-
-		changed_files.insert(len(changed_files), item)
-	
-	database.commit()
-	database.close()
+changed_files = getChangedFiles(files, builddir)
 
 # check for any changes #
 if len(changed_files) == 0:
@@ -139,31 +98,16 @@ if len(changed_files) == 0:
 	sys.exit(1)
 
 # compile file to objects #
-buildstr = compiler + " -c"
-for item in changed_files:
-	buildstr = buildstr + " " + item
-
 print("\nbuilding files ...")
-print(buildstr)
-os.system(buildstr)
+buildFiles(changed_files, builddir, compiler)
 
 # move objects to build directory #
 print("\nmoving into build ...")
 os.system("mv *.o " + builddir)
 
 # link files #
-linkstr = compiler + " -o " + output
-for item in libs:
-	linkstr = linkstr + " " + item
-
-for item in os.listdir(builddir):
-	if item[-2:] == ".o":
-		linkstr = linkstr + " " + builddir + item
-
 print("linking files ...")
-os.system(linkstr)
-
-print(linkstr)
+linkFiles(builddir, compiler, libs, output)
 
 print("\nBuild done > " + output)
 
