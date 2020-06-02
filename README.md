@@ -12,6 +12,7 @@ I found that make was too complicated when all I want to do is compile some file
 - [ ] Detect new files
 - [ ] Support for compile templates, eg: `{%COMPILER%} {%ARGS%} {%LIBS%} {%FILES%}`
 - [ ] Clean source code
+- [ ] Add more examples
 
 ### How to use
 #### BMake files
