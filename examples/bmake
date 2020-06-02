@@ -1,0 +1,5 @@
+# BEBS_FILE #
+files = ["main.cpp", "inc/second.cpp", "inc/third.cpp"]
+builddir = "build/"
+libs = [""]
+ 
