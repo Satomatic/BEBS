@@ -10,7 +10,11 @@ I found that make was too complicated when all I want to do is compile some file
 #### Todo
 - [ ] Header file recompile
 - [ ] Detect new files
+<<<<<<< HEAD
+- [x] Support for compile templates, eg: `{%COMPILER%} {%ARGS%} {%LIBS%} {%FILES%}`
+=======
 - [ ] Support for compile templates, eg: `{%COMPILER%} {%ARGS%} {%LIBS%} {%FILES%}`
+>>>>>>> 0f4e80a32facb0609e10e4ff83dab848de02d4b4
 - [x] Clean source code
 - [ ] Add more examples
 
@@ -40,12 +44,17 @@ The initial build may take some time however after this, it will only compile th
 Do not remove the build.db file unless you are willing to recompile the whole project. However, if you wish to do this you also have the option of adding `-f` to the run command.
 
 #### Extra bmake options
-|                          |                                                                                 |
-|------------------------- |---------------------------------------------------------------------------------|
-| **output = %filename%**  | -- Will specify an output file                                                  |
-| **execute = %command%**  | -- Will specify a command to run after build, such as `./a.out -f -c args4life` |
-| **force = True/False**   | -- Force full build every time (wouldn't advise using)                          |
-| **compiler = %compiler%**| -- Specify a compiler to use (defaults to g++)                                  |
+|                                 |                                                                                 |
+|-------------------------------- |---------------------------------------------------------------------------------|
+| **output = %filename%**         | -- Will specify an output file                                                  |
+| **execute = %command%**         | -- Will specify a command to run after build, such as `./a.out -f -c args4life` |
+| **force = True/False**          | -- Force full build every time (wouldn't advise using)                          |
+| **compiler = %compiler%**       | -- Specify a compiler to use (defaults to g++)                                  |
+| **linker = %linker%**           | -- Specify a linker to use (defaults to g++)                                    |
+| **build_args = %args%**         | -- Specify args for the build process to use (should always use -c)             |
+| **link_args = %args%**          | -- Specify args for the linking stage                                           |
+| **build_template = %template%** | -- Define the structure of the build command, [More info](#templates)           |
+| **link_template = %template%**  | -- Define the structure of the link command, [More info](#templates)            |
 
 #### Command line args
 |                          |                                                                                 |
@@ -54,6 +63,13 @@ Do not remove the build.db file unless you are willing to recompile the whole pr
 | **-x %command%**         | -- Will specify a command to run after build, such as `./a.out -f -c args4life` |
 | **-o %filename%**        | -- Specify an output file                                                       |
 | **-f**                   | -- Force full build                                                             |
+
+#### Templates
+Templates are used to tell BEBS how the compile and link commands should be structured. \
+Example: \
+`build_template = {compiler} {args} {files}` \
+`link_template = {linker} {args} {output} {files} {libs}` \
+These are the default templates that BEBS will use. There aren't many situations where you would need to define a custom one but the option is available.
 
 ### Build and Run
 #### Windows

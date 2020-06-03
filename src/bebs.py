@@ -11,7 +11,16 @@ execute = None
 output = "a.out"
 force = False
 error = False
+
 compiler = "g++"
+linker = "g++"
+
+build_args = ["-c"]
+link_args = []
+libs = []
+
+build_template = "{compiler} {args} {files}"
+link_template = "{linker} {args} {output} {files} {libs}"
 
 # check args #
 i = 0
@@ -99,7 +108,7 @@ if len(changed_files) == 0:
 
 # compile file to objects #
 print("\nbuilding files ...")
-buildFiles(changed_files, builddir, compiler)
+buildFiles(compiler, build_args, changed_files, builddir, build_template)
 
 # move objects to build directory #
 print("\nmoving into build ...")
@@ -107,7 +116,7 @@ os.system("mv *.o " + builddir)
 
 # link files #
 print("linking files ...")
-linkFiles(builddir, compiler, libs, output)
+linkFiles(linker, link_args, output, builddir, libs, link_template)
 
 print("\nBuild done > " + output)
 
