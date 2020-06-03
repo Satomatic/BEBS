@@ -10,11 +10,7 @@ I found that make was too complicated when all I want to do is compile some file
 #### Todo
 - [ ] Header file recompile
 - [ ] Detect new files
-<<<<<<< HEAD
 - [x] Support for compile templates, eg: `{%COMPILER%} {%ARGS%} {%LIBS%} {%FILES%}`
-=======
-- [ ] Support for compile templates, eg: `{%COMPILER%} {%ARGS%} {%LIBS%} {%FILES%}`
->>>>>>> 0f4e80a32facb0609e10e4ff83dab848de02d4b4
 - [x] Clean source code
 - [ ] Add more examples
 
