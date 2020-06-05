@@ -9,7 +9,7 @@ I found that make was too complicated when all I want to do is compile some file
 
 #### Todo
 - [ ] Header file recompile
-- [ ] Detect new files
+- [x] Detect new files
 - [x] Support for compile templates, eg: `{%COMPILER%} {%ARGS%} {%LIBS%} {%FILES%}`
 - [x] Clean source code
 - [ ] Add more examples
