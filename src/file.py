@@ -1,7 +1,7 @@
 import sqlite3
 import os
 
-def getChangedFiles(files=None, builddir=None):
+def getChangedFiles(files=None, builddir=None, exts=None):
 	changed_files = []
 
 	# cache found, only compile changed files #
@@ -37,11 +37,22 @@ def getChangedFiles(files=None, builddir=None):
 		database.commit()
 
 		for item in files:
-			database.execute("INSERT INTO files values ('" + item + "', '" + str(os.stat(item).st_mtime) + "');")
+			# if marked as directory #
+			if item[:3] == "%d " or item[:3] == "%D ":
+				for file in os.listdir(item[3:]):
+					filesplit = file[3:].split(".")
 
-			print("new file '" + item + "'")
+					# if file should be compiled #
+					if filesplit[len(filesplit) - 1] in exts:
+						database.execute("INSERT INTO files values ('" + item[3:] + file + "', '" + str(os.stat(item[3:] + file).st_mtime) + "');")
+						print("new file '" + item[3:] + file + "'")
+						changed_files.insert(len(changed_files), item[3:] + file)
 
-			changed_files.insert(len(changed_files), item)
+			# single file #
+			else:
+				database.execute("INSERT INTO files values ('" + item + "', '" + str(os.stat(item).st_mtime) + "');")
+				print("new file '" + item + "'")
+				changed_files.insert(len(changed_files), item)
 
 	database.commit()
 	database.close()

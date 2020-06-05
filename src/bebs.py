@@ -15,6 +15,7 @@ error = False
 compiler = "g++"
 linker = "g++"
 
+exts = ["cpp", "c"]
 build_args = ["-c"]
 link_args = []
 libs = []
@@ -99,7 +100,7 @@ if not os.path.isdir(builddir):
 
 # collect project files #
 print("Collecting files ...")
-changed_files = getChangedFiles(files, builddir)
+changed_files = getChangedFiles(files, builddir, exts)
 
 # check for any changes #
 if len(changed_files) == 0:

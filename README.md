@@ -28,6 +28,17 @@ builddir = "build/"
 # extra libs the project should be compiled with
 libs = ["-lgit2"]
 ```
+If you don't want to manually add each file to the list, you can instead define a folder of files.
+```python
+# %d (or %D) tells bebs that the item in actually a folder that should be listed
+files ["main.cpp", "%d lib/"]
+exts = ["cpp"]
+# when defining a folder, you need to tell bebs what extentions to looks for
+# by default bebs will look for C and CPP files so the exts shouldn't usually need to be defined
+# it is not recommended you include header extentions in this list
+```
+
+
 [More commands can be found here](#extra-bmake-options)
 
 #### Running the BEBS file
