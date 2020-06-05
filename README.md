@@ -33,9 +33,9 @@ If you don't want to manually add each file to the list, you can instead define 
 # %d (or %D) tells bebs that the item in actually a folder that should be listed
 files ["main.cpp", "%d lib/"]
 exts = ["cpp"]
-# when defining a folder, you need to tell bebs what extentions to looks for
+# when defining a folder, you need to tell bebs what extensions to looks for
 # by default bebs will look for C and CPP files so the exts shouldn't usually need to be defined
-# it is not recommended you include header extentions in this list
+# it is not recommended you include header extensions in this list
 ```
 
 
@@ -46,7 +46,7 @@ Assuming you have the BMake configured correctly, you should be able to just run
 `bebs.py %filename%`
 and it will begin to compile your project.
 
-The initial build may take some time however after this, it will only compile the files which have changed. A build cache is placed in the build folder aswell as the object files.
+The initial build may take some time however after this, it will only compile the files which have changed. A build cache is placed in the build folder as well as the object files.
 #### Warning! ####
 Do not remove the build.db file unless you are willing to recompile the whole project. However, if you wish to do this you also have the option of adding `-f` to the run command.
 
