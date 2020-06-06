@@ -10,36 +10,47 @@ def getChangedFiles(files=None, builddir=None, exts=None):
 		cursor = database.cursor()
 
 		for item in files:
-			cursor.execute("SELECT * FROM files WHERE file ='" + item + "'")
-			dbreturn = cursor.fetchall()
+			dirItems = getItemDir(item, exts)
 
-			# new file found #
-			if len(dbreturn) == 0:
-				dirItems = getItemDir(item, exts)
+			if len(dirItems) > 0:
+				for file in dirItems:
+					cursor.execute("SELECT * FROM files WHERE file ='" + file + "'")
+					dbreturn = cursor.fetchall()
 
-				# if item is directory #
-				if len(dirItems) > 0:
-					for file in dirItems:
+					if len(dbreturn) == 0:
 						database.execute("INSERT INTO files values ('" + file + "', '" + str(os.stat(file).st_mtime) + "');")
 						print("new file '" + file + "'")
 						changed_files.insert(len(changed_files), file)
-				
-				# if item in single file #
-				else:
+
+					else:
+						last_c_time = dbreturn[0][1]
+						curr_c_time = str(os.stat(file).st_mtime)
+
+						if last_c_time != curr_c_time:
+							changed_files.insert(len(changed_files), dbreturn[0][0])
+							cursor.execute("UPDATE files SET date = '" + curr_c_time + "' WHERE file = '" + file + "';")
+						else:
+							print("skipped '" + file + "'")
+			else:
+				cursor.execute("SELECT * FROM files WHERE file ='" + item + "'")
+				dbreturn = cursor.fetchall()
+
+				# new file found #
+				if len(dbreturn) == 0:
 					print("new file " + item)
 					cursor.execute("INSERT INTO files values ('" + item + "', '" + str(os.stat(item).st_mtime) + "');")
 					changed_files.insert(len(changed_files), item)
 
-			# check if file has been changed #
-			else:
-				last_c_time = dbreturn[0][1]
-				curr_c_time = str(os.stat(item).st_mtime)
-
-				if last_c_time != curr_c_time:
-					changed_files.insert(len(changed_files), dbreturn[0][0])
-					cursor.execute("UPDATE files SET date = '" + curr_c_time + "' WHERE file = '" + item + "';")
+				# check if file has been changed #
 				else:
-					print("skipped '" + item + "'")
+					last_c_time = dbreturn[0][1]
+					curr_c_time = str(os.stat(item).st_mtime)
+
+					if last_c_time != curr_c_time:
+						changed_files.insert(len(changed_files), dbreturn[0][0])
+						cursor.execute("UPDATE files SET date = '" + curr_c_time + "' WHERE file = '" + item + "';")
+					else:
+						print("skipped '" + item + "'")
 
 	# no cache found, compile everything #
 	else:
