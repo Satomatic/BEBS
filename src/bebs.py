@@ -2,6 +2,7 @@ from build import *
 from file import *
 import linecache
 import sqlite3
+import time
 import sys
 import os
 
@@ -30,10 +31,10 @@ for x in range(len(sys.argv)):
 		continue
 
 	if x > i:
-		if sys.argv[x] == "-f":
+		if sys.argv[x] == "-f" or sys.argv[x] == "-F":
 			force = True
 
-		elif sys.argv[x] == "-o":
+		elif sys.argv[x] == "-o" or sys.argv[x] == "-O":
 			if len(sys.argv) > x + 1:
 				output = sys.argv[x + 1]
 				i = x + 1
@@ -41,7 +42,7 @@ for x in range(len(sys.argv)):
 				print("[BEBS] ! '-o' Please specify output file")
 				error = True
 
-		elif sys.argv[x] == "-x":
+		elif sys.argv[x] == "-x" or sys.argv[x] == "-X":
 			if len(sys.argv) > x + 1:
 				execute = sys.argv[x + 1]
 				i = x + 1
@@ -65,7 +66,7 @@ if makefile == None:
 				pass
 
 # check for bmake file #
-if makefile == None:
+if makefile == None or not os.path.isfile(makefile):
 	print("[BEBS] ! Couldn't find make file")
 	sys.exit(1)
 

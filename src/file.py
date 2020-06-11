@@ -3,25 +3,34 @@ import os
 
 def getChangedFiles(files=None, builddir=None, exts=None):
 	changed_files = []
+	database_files = {}
 
 	# cache found, only compile changed files #
 	if os.path.isfile(builddir + "build.db"):
 		database = sqlite3.connect(builddir + "build.db")
 		cursor = database.cursor()
 
+		# get files from database #
+		cursor.execute("SELECT * FROM files;")
+		dbreturn = cursor.fetchall()
+		for item in dbreturn:
+			database_files[item[0]] = item
+
 		for item in files:
 			dirItems = getItemDir(item, exts)
 
+			# directory object found #
 			if len(dirItems) > 0:
 				for file in dirItems:
-					cursor.execute("SELECT * FROM files WHERE file ='" + file + "'")
-					dbreturn = cursor.fetchall()
+					dbreturn = [database_files[file]]
 
+					# new file found #
 					if len(dbreturn) == 0:
 						database.execute("INSERT INTO files values ('" + file + "', '" + str(os.stat(file).st_mtime) + "');")
 						print("new file '" + file + "'")
 						changed_files.insert(len(changed_files), file)
 
+					# check when last edited #
 					else:
 						last_c_time = dbreturn[0][1]
 						curr_c_time = str(os.stat(file).st_mtime)
@@ -31,9 +40,10 @@ def getChangedFiles(files=None, builddir=None, exts=None):
 							cursor.execute("UPDATE files SET date = '" + curr_c_time + "' WHERE file = '" + file + "';")
 						else:
 							print("skipped '" + file + "'")
+			
+			# normal file object #
 			else:
-				cursor.execute("SELECT * FROM files WHERE file ='" + item + "'")
-				dbreturn = cursor.fetchall()
+				dbreturn = [database_files[item]]
 
 				# new file found #
 				if len(dbreturn) == 0:
