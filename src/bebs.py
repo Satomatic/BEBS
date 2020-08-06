@@ -106,6 +106,7 @@ changed_files = getChangedFiles(files, builddir, exts)
 # check for any changes #
 if len(changed_files) == 0:
 	print("\nno changes found\n")
+	executeCommand(execute)
 	sys.exit(1)
 
 # compile file to objects #
@@ -123,6 +124,4 @@ linkFiles(linker, link_args, output, builddir, libs, link_template)
 print("\nBuild done > " + output)
 
 # execute final command #
-if (execute != None):
-	os.system(execute)
-	print("execute >> " + execute)
+executeCommand(execute)

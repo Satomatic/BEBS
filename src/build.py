@@ -54,3 +54,7 @@ def linkFiles(linker, args, output, builddir, libs, template):
 
 	print(link_str)
 	os.system(link_str)
+
+def executeCommand(execute):
+	if execute != None:
+		os.system(execute)
