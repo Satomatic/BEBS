@@ -31,10 +31,10 @@ for x in range(len(sys.argv)):
 		continue
 
 	if x > i:
-		if sys.argv[x] == "-f" or sys.argv[x] == "-F":
+		if sys.argv[x].lower() == "-f":
 			force = True
 
-		elif sys.argv[x] == "-o" or sys.argv[x] == "-O":
+		elif sys.argv[x].lower() == "-o":
 			if len(sys.argv) > x + 1:
 				output = sys.argv[x + 1]
 				i = x + 1
@@ -42,7 +42,7 @@ for x in range(len(sys.argv)):
 				print("[BEBS] ! '-o' Please specify output file")
 				error = True
 
-		elif sys.argv[x] == "-x" or sys.argv[x] == "-X":
+		elif sys.argv[x].lower() == "-x":
 			if len(sys.argv) > x + 1:
 				execute = sys.argv[x + 1]
 				i = x + 1
@@ -54,7 +54,7 @@ for x in range(len(sys.argv)):
 			makefile = sys.argv[x]
 
 # search for file #
-if makefile == None:
+if not makefile:
 	for item in os.listdir():
 		if item == "bmake":
 			makefile = item
@@ -82,13 +82,13 @@ required = ['files', 'builddir', 'libs']
 
 for item in required:
 	if item not in locals():
-		print("[BEBS] ! Please sepcify '" + item + "'")
+		print(f"[BEBS] ! Please specify '{item}'")
 		error = True
 
-if error == True:
+if error:
 	sys.exit(1)
 
-if force == True:
+if force:
 	print("'-f' force full recompile")
 
 	for item in os.listdir(builddir):
@@ -96,7 +96,7 @@ if force == True:
 
 # check build location #
 if not os.path.isdir(builddir):
-	print("[BEBS] ! `builddir` does not exist '" + builddir + "'")
+	print(f"[BEBS] ! `builddir` does not exist '{builddir}'")
 	sys.exit(1)
 
 # collect project files #
