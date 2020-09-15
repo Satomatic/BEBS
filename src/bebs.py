@@ -16,6 +16,7 @@ error = False
 compiler = "g++"
 linker = "g++"
 
+pretasks = []
 exts = ["cpp", "c"]
 build_args = ["-c"]
 link_args = []
@@ -108,6 +109,13 @@ if len(changed_files) == 0:
 	print("\nno changes found\n")
 	executeCommand(execute)
 	sys.exit(1)
+
+# execute pre-tasks #
+if len(pretasks) > 0:
+	print("\nexecuting pretasks ...")
+	for task in pretasks:
+		print(task)
+		os.system(task)
 
 # compile file to objects #
 print("\nbuilding files ...")
